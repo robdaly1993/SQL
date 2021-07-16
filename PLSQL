@@ -1,0 +1,13 @@
+/* SimpleOracle Function to insert many records. Using to   test with DMS migrations for CDC changes. */
+
+SET SERVEROUTPUT ON;
+DECLARE 
+
+BEGIN
+    FOR i IN 1..10000 
+    LOOP
+          INSERT INTO DMS_SAMPLE.testchanges VALUES(1);
+    END LOOP; 
+    COMMIT;
+END;
+/   
