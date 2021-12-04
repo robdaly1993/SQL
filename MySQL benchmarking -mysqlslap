@@ -1,0 +1,59 @@
+MySQL benchmarking
+
+https://www.digitalocean.com/community/tutorials/how-to-measure-mysql-query-performance-with-mysqlslap
+
+We will begin by using mysqlslap's auto-generate-sql feature. When we use auto-generated SQL, mysqlslap will create a separate temporary database - aptly called mysqlslap. This database will have a simple table in it with one integer and one varchar type column populated with sample data. This can be a quick and easy way to check the overall performance of the database server.
+
+
+mysqlslap --auto-generate-sql --verbose  -h endpoint.xxxxxx70814n.eu-west-1.rds.amazonaws.com -P 3306 -u user -p
+Enter password:
+Benchmark
+        Average number of seconds to run all queries: 0.078 seconds
+        Minimum number of seconds to run all queries: 0.078 seconds
+        Maximum number of seconds to run all queries: 0.078 seconds
+        Number of clients running queries: 1
+        Average number of queries per client: 0
+
+
+
+mysqlslap --auto-generate-sql --verbose  -h mysqldumptest.ceencu70814n.eu-west-1.rds.amazonaws.com -P 3306 -u user -p --concurrency=50 --iterations=10
+Enter password:
+Benchmark
+        Average number of seconds to run all queries: 2.153 seconds
+        Minimum number of seconds to run all queries: 2.123 seconds
+        Maximum number of seconds to run all queries: 2.293 seconds
+        Number of clients running queries: 50
+        Average number of queries per client: 0
+
+What this command means is that fifty simulated client connections will each throw the same test query at the same time, and this test will be repeated ten times.
+
+mysqlslap --auto-generate-sql --verbose  -h mysqldumptest.ceencu70814n.eu-west-1.rds.amazonaws.com -P 3306 -u user -p --concurrency=50 --iterations=10;
+
+mysqlslap  -h endpoint.xxxxx.eu-west-1.rds.amazonaws.com.eu-west-1.rds.amazonaws.com -P 3306 -u user -p --concurrency=50 --iterations=10 --create-schema=employees --query="SELECT * FROM dept_emp;" --verbose
+
+[ec2-user@ip-10-0-0-188 etc]$  mysqlslap  -h endpoint.xxxxx.eu-west-1.rds.amazonaws.com -P 3306 -u user -p --concurrency=5 --iterations=10 --create-schema=rob --query="INSERT INTO employ_2 (a,b) values(123, 321);" --verbose
+
+
+[ec2-user@ip-10-0-0-188 etc]$  mysqlslap  -h endpoint.xxxxx.eu-west-1.rds.amazonaws.com -P 3306 -u user -p --concurrency=2 --iterations=10 --create-schema=rob --query="INSERT INTO employ_2 (a,b, photo) values(123, 321, 'blobs fail alot');" --verbose  
+
+
+create table test1a( var1 int);
+
+select * from test1a;
+select count(*) from test1a;
+
+insert into test1a (var1)
+values (12);
+
+mysqlslap  -h endpoint.xxxxx.eu-west-1.rds.amazonaws.com -P 3306 -u user -p --concurrency=5 --iterations=10 --create-schema=employees --query="SELECT * FROM test;" --verbose
+
+
+mysqlslap  -h endpoint.xxxxx.eu-west-1.rds.amazonaws.com -P 3306 -u user -p --concurrency=1 --iterations=100 --create-schema=employees --query="INSERT INTO jobs(JOB_ID,JOB_TITLE) VALUES(1001,'OFFICER');COMMIT;" --verbose
+
+
+
+[ec2-user@ip-10-0-0-101 ~]$ mysqlslap  -h endpoint.xxxxx.eu-west-1.rds.amazonaws.com.eu-west-1.rds.amazonaws.com -P 3306 -u user -p --concurrency=600 --iterations=300000 --create-schema=employees --query="INSERT INTO jobs select * from jobs;" --verbose
+
+mysqlslap  -h endpoint.xxxxx.eu-west-1.rds.amazonaws.com.eu-west-1.rds.amazonaws.com -P 3306 -u user -p --concurrency=50  --iterations=1000000 --auto-generate-sql --auto-generate-sql-load-type=write --commit=1 --number-of-queries=40000 --verbose
+
+mysqlslap  -h endpoint.xxxxx.eu-west-1.rds.amazonaws.com.ceencu70814n.eu-west-1.rds.amazonaws.com -P 3306 -u user -p --auto-generate-sql --auto-generate-sql-load-type=write --auto-generate-sql-add-autoincrement --auto-generate-sql-secondary-indexes=1 --commit=1 --number-of-queries=40000 --iterations=5
