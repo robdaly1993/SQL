@@ -1,4 +1,4 @@
-/* SimpleOracle Function to insert many records. Using to   test with DMS migrations for CDC changes. */
+/* Simple Oracle Function to insert many records. Using to   test with DMS migrations for CDC changes. */
 
 SET SERVEROUTPUT ON;
 DECLARE 
